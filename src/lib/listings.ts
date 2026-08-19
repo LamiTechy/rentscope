@@ -96,18 +96,6 @@ function findResultsArray(data: Record<string, unknown>): Record<string, unknown
   return [];
 }
 
-function toProxyImageUrl(url: string): string {
-  try {
-    const host = new URL(url).hostname;
-    if (host.endsWith(".apartments.com")) {
-      return `/api/img?url=${encodeURIComponent(url)}`;
-    }
-  } catch {
-    // fall through — leave the URL untouched
-  }
-  return url;
-}
-
 export async function fetchApartmentsPhotos(listingKey: string): Promise<string[]> {
   const apiKey = process.env.REALTYAPI_KEY;
   if (!apiKey || !listingKey) return [];
@@ -138,7 +126,7 @@ export async function fetchApartmentsPhotos(listingKey: string): Promise<string[
     .filter((x): x is { u: string; w: number } => x.u !== null)
     .sort((a, b) => b.w - a.w)
     .slice(0, 12)
-    .map((x) => toProxyImageUrl(x.u));
+    .map((x) => x.u);
 }
 
 export interface ListingDetails {
@@ -322,7 +310,7 @@ function normalizeApartmentsListing(placard: Record<string, unknown>): Listing |
   ) {
     photos.push(placard.primaryImage);
   }
-  const photosLarger = photos.map(toProxyImageUrl);
+  const photosLarger = photos;
 
   const listingKey = String(placard.listingKey ?? placard.listing_id ?? placard.id ?? "");
 
