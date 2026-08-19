@@ -141,7 +141,7 @@ export default function SearchBar({
         <button
           onClick={submit}
           disabled={query.trim().length < 3}
-          className={`shrink-0 rounded-xl bg-emerald-600 font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 ${big ? "px-6 py-3 text-base" : "px-4 py-2 text-sm"}`}
+          className={`shrink-0 rounded-xl bg-emerald-600 font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 ${big ? "px-5 py-3 text-base sm:px-6" : "px-3 py-2 text-xs sm:px-4 sm:text-sm"}`}
         >
           Search
         </button>

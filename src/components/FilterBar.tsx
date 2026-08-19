@@ -16,12 +16,12 @@ const TYPES = ["House", "Apartment", "Townhouse", "Condo", "Duplex"];
 
 export default function FilterBar({ filters, resultCount, source, onChange }: FilterBarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-2 border-b border-zinc-200 bg-white px-4 py-3">
-      <span className="text-sm font-semibold text-zinc-900">
+    <div className="flex flex-nowrap items-center gap-2 overflow-x-auto border-b border-zinc-200 bg-white px-4 py-2.5 lg:flex-wrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <span className="shrink-0 text-sm font-semibold text-zinc-900">
         {resultCount} {resultCount === 1 ? "home" : "homes"}
       </span>
 
-      <label className="flex items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-600">
+      <label className="flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-600">
         Within
         <select
           value={filters.radiusMiles}
@@ -36,7 +36,7 @@ export default function FilterBar({ filters, resultCount, source, onChange }: Fi
         </select>
       </label>
 
-      <label className="flex items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-600">
+      <label className="flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-600">
         Max
         <select
           value={filters.maxPrice ?? ""}
@@ -54,7 +54,7 @@ export default function FilterBar({ filters, resultCount, source, onChange }: Fi
         </select>
       </label>
 
-      <label className="flex items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-600">
+      <label className="flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-600">
         Beds
         <select
           value={filters.minBeds ?? ""}
@@ -72,7 +72,7 @@ export default function FilterBar({ filters, resultCount, source, onChange }: Fi
         </select>
       </label>
 
-      <label className="flex items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-600">
+      <label className="flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-200 px-2.5 py-1.5 text-xs text-zinc-600">
         Type
         <select
           value={filters.propertyType ?? ""}
@@ -91,7 +91,7 @@ export default function FilterBar({ filters, resultCount, source, onChange }: Fi
       </label>
 
       <span
-        className={`ml-auto rounded-full px-2.5 py-1 text-[11px] font-medium ${
+        className={`ml-auto shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium ${
           source === "mock"
             ? "bg-amber-100 text-amber-700"
             : "bg-emerald-100 text-emerald-700"

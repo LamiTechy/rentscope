@@ -108,22 +108,22 @@ export default function Home() {
   if (!searched) {
     return (
       <div className="flex flex-1 flex-col">
-        <section className="flex flex-1 flex-col items-center justify-center bg-gradient-to-b from-emerald-50 via-white to-white px-4 py-20">
-          <h1 className="max-w-2xl text-center text-4xl font-extrabold tracking-tight text-zinc-900 sm:text-5xl">
+        <section className="flex flex-1 flex-col items-center justify-center bg-gradient-to-b from-emerald-50 via-white to-white px-4 py-14 sm:py-20">
+          <h1 className="max-w-2xl text-center text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-5xl">
             Find your next <span className="text-emerald-600">home</span> anywhere in the US
           </h1>
-          <p className="mt-4 max-w-xl text-center text-lg text-zinc-500">
+          <p className="mt-3 max-w-xl text-center text-base text-zinc-500 sm:mt-4 sm:text-lg">
             Search any address, city, or ZIP code and see available rentals around it — right on
             the map.
           </p>
-          <div className="mt-8 w-full max-w-2xl">
+          <div className="mt-6 w-full max-w-2xl sm:mt-8">
             <SearchBar
               onSelect={handleSelectLocation}
               size="lg"
               autoFocus
             />
           </div>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-zinc-500">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-zinc-500 sm:mt-10">
             <span className="flex items-center gap-2">
               <Check className="size-4 text-emerald-600" strokeWidth={2.5} /> 3.6M+ live listings
             </span>
@@ -188,9 +188,9 @@ export default function Home() {
       />
 
       <main className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <div className="flex min-h-0 flex-1 flex-col border-r border-zinc-200 lg:w-[440px] lg:shrink-0 lg:basis-[440px]">
+        <div className="order-2 flex min-h-0 flex-1 flex-col border-r border-zinc-200 lg:order-1 lg:w-[440px] lg:shrink-0 lg:basis-[440px]">
           <div className="flex items-center justify-between px-4 py-2.5">
-            <h2 className="text-sm font-semibold text-zinc-700">
+            <h2 className="truncate text-sm font-semibold text-zinc-700">
               {loading ? "Searching…" : `${listings.length} rentals near ${searchLabel.split(",")[0]}`}
             </h2>
           </div>
@@ -236,7 +236,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative h-[45vh] shrink-0 lg:h-auto lg:flex-1">
+        <div className="relative order-1 h-[38vh] shrink-0 border-b border-zinc-200 lg:order-2 lg:h-auto lg:flex-1 lg:border-b-0">
           {location && (
             <MapView
               listings={listings}
