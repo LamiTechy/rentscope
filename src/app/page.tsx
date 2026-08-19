@@ -135,26 +135,6 @@ export default function Home() {
             </span>
           </div>
         </section>
-        <footer className="border-t border-zinc-100 py-6 text-center text-xs text-zinc-400">
-          Rental listings via{" "}
-          <a
-            href="https://www.apartments.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-zinc-500 underline-offset-2 hover:underline"
-          >
-            Apartments.com
-          </a>{" "}
-          data · Geocoding &amp; maps ©{" "}
-          <a
-            href="https://www.openstreetmap.org/copyright"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-zinc-500 underline-offset-2 hover:underline"
-          >
-            OpenStreetMap
-          </a>
-        </footer>
       </div>
     );
   }
@@ -173,7 +153,7 @@ export default function Home() {
           <span className="flex size-7 items-center justify-center rounded-lg bg-emerald-600 text-sm text-white">
               <Building2 className="size-4" strokeWidth={2.5} />
             </span>
-          <span className="hidden sm:inline">RentScope</span>
+          <span className="hidden sm:inline">Optimum Property Management Rentals</span>
         </button>
         <div className="mx-auto w-full max-w-xl">
           <SearchBar onSelect={handleSelectLocation} defaultValue={searchLabel} />

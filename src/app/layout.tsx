@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "RentScope — Find rentals anywhere in the US",
+  title: "Optimum Property Management Rentals — Find rentals anywhere in the US",
   description:
     "Search any US address, city, or ZIP code and see available rental homes around it on a map.",
 };

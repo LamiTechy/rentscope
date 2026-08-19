@@ -1,4 +1,4 @@
-# RentScope — Rental finder for the US
+# Optimum Property Management Rentals — Rental finder for the US
 
 Search any US address, city, or ZIP code and see available rentals around it on a map, with filters for radius, price, beds, and property type.
 
