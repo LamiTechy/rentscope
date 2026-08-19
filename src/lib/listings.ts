@@ -2,6 +2,10 @@ import type { Filters, Listing } from "./types";
 
 const APARTMENTS_BASE = "https://apartments.realtyapi.io";
 
+const CACHE_TTL_MS = 30 * 60 * 1000;
+const listingsCache = new Map<string, { at: number; listings: Record<string, unknown>[] }>();
+const detailsCache = new Map<string, { at: number; details: ListingDetails }>();
+
 export const MOCK_DATA_NOTE =
   "You are viewing sample data. Add a REALTYAPI_KEY to .env.local to load real rental listings.";
 
@@ -61,17 +65,25 @@ export async function fetchRealtyApiListings(
     if (mapped) params.set("propertyType", mapped);
   }
 
-  const res = await fetch(`${APARTMENTS_BASE}/search/bylocation?${params.toString()}`, {
-    headers: { "x-realtyapi-key": apiKey },
-    signal: AbortSignal.timeout(20000),
-  });
+  const cacheKey = params.toString();
+  const cached = listingsCache.get(cacheKey);
+  let rawListings: Record<string, unknown>[];
+  if (cached && Date.now() - cached.at < CACHE_TTL_MS) {
+    rawListings = cached.listings;
+  } else {
+    const res = await fetch(`${APARTMENTS_BASE}/search/bylocation?${cacheKey}`, {
+      headers: { "x-realtyapi-key": apiKey },
+      signal: AbortSignal.timeout(20000),
+    });
 
-  if (!res.ok) {
-    throw new Error(`Apartments API error: ${res.status}`);
+    if (!res.ok) {
+      throw new Error(`Apartments API error: ${res.status}`);
+    }
+
+    const data = (await res.json()) as Record<string, unknown>;
+    rawListings = findResultsArray(data);
+    listingsCache.set(cacheKey, { at: Date.now(), listings: rawListings });
   }
-
-  const data = (await res.json()) as Record<string, unknown>;
-  const rawListings = findResultsArray(data);
 
   const radiusM = filters.radiusMiles * 1609.34;
   return rawListings
@@ -139,6 +151,9 @@ export async function fetchListingDetails(listingKey: string): Promise<ListingDe
   const apiKey = process.env.REALTYAPI_KEY;
   if (!apiKey || !listingKey) return { photos: [], baths: null, sqft: null };
 
+  const cached = detailsCache.get(listingKey);
+  if (cached && Date.now() - cached.at < CACHE_TTL_MS) return cached.details;
+
   const photosPromise = fetchApartmentsPhotos(listingKey).catch(() => []);
 
   const availPromise = fetch(
@@ -184,7 +199,9 @@ export async function fetchListingDetails(listingKey: string): Promise<ListingDe
     }
   }
 
-  return { photos, baths, sqft };
+  const details: ListingDetails = { photos, baths, sqft };
+  detailsCache.set(listingKey, { at: Date.now(), details });
+  return details;
 }
 
 function parseRangeRange(raw: unknown): { min: number | null; max: number | null } {
@@ -313,15 +330,21 @@ function normalizeApartmentsListing(placard: Record<string, unknown>): Listing |
   const photosLarger = photos;
 
   const listingKey = String(placard.listingKey ?? placard.listing_id ?? placard.id ?? "");
+  const rawType =
+    typeof placard.propertyType === "string"
+      ? placard.propertyType
+      : typeof placard.type === "string"
+        ? placard.type
+        : "Property";
 
   return {
     id: listingKey.length > 0 ? listingKey : `${lat},${lng}`,
     title:
       typeof placard.name === "string" && placard.name.length > 0
         ? placard.name
-        : typeof placard.title === "string"
+        : typeof placard.title === "string" && placard.title.length > 0
           ? placard.title
-          : "Rental property",
+          : `${rawType} for rent`,
     description:
       typeof placard.description === "string" && placard.description.length > 0
         ? placard.description
@@ -358,12 +381,7 @@ function normalizeApartmentsListing(placard: Record<string, unknown>): Listing |
     lat,
     lng,
     images: photosLarger.slice(0, 8),
-    propertyType:
-      typeof placard.propertyType === "string"
-        ? placard.propertyType
-        : typeof placard.type === "string"
-          ? placard.type
-          : "Property",
+    propertyType: rawType,
     isMock: false,
   };
 }
